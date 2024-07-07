@@ -11,8 +11,8 @@ contract Vendor is Ownable {
 	event BuyTokens(address buyer, uint256 amountOfETH, uint256 amountOfTokens);
 	event SellTokens(
 		address seller,
-		uint256 amountOfTokens,
-		uint256 amountOfEth
+		uint256 amountOfETH,
+		uint256 amountOfTokens
 	);
 
 	error InsufficientTokenBalance();
@@ -69,7 +69,7 @@ contract Vendor is Ownable {
 		(bool success, ) = msg.sender.call{ value: ethAmount }("");
 		require(success, "ETH transfer failed");
 
-		emit SellTokens(msg.sender, amount, ethAmount);
+		emit SellTokens(msg.sender, ethAmount, amount);
 	}
 
 	// Special receive function to accept ETH
