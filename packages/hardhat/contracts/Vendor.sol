@@ -45,30 +45,23 @@ contract Vendor is Ownable {
 		if (yourToken.balanceOf(msg.sender) < amount) {
 			revert InsufficientTokenBalance();
 		}
-
 		// ETH amount to pay to the seller
 		uint256 ethAmount = amount / tokensPerEth;
-
 		// Check if the vendor contract has enough ETH to pay for the tokens
 		if (address(this).balance < ethAmount) {
 			revert VendorHasInsufficientETHBalance();
 		}
-
 		if (!yourToken.approve(address(this), amount)) {
 			revert ApproveBefore();
 		}
-
 		if (yourToken.allowance(msg.sender, address(this)) < amount) {
 			revert InsufficiantAllowance();
 		}
-
 		// Transfer tokens from sender to the contract
 		yourToken.transferFrom(msg.sender, address(this), amount);
-
 		// Send ETH from contract to the sender
 		(bool success, ) = msg.sender.call{ value: ethAmount }("");
 		require(success, "ETH transfer failed");
-
 		emit SellTokens(msg.sender, ethAmount, amount);
 	}
 
